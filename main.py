@@ -20,5 +20,27 @@ class Data:
         }
         self.data = self.get_data()
 
- 
+    def get_data(self):
+        response = requests.get(f'https://www.parsehub.com/api/v2/projects/{self.project_token}/last_ready_run/data',
+                                params=self.params)
+        data = json.loads(response.text)
+        return data
+
+    def get_total_cases(self):
+        data = self.data['total']
+
+        for content in data:
+            if content['name'] == "Coronavirus Cases:":
+                return content['value']
+
+    def get_total_deaths(self):
+        data = self.data['total']
+
+        for content in data:
+            if content['name'] == "Deaths:":
+                return content['value']
+
+        return "0"
+
+
 
