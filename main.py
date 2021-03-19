@@ -58,5 +58,42 @@ class Data:
 
         return countries
 
+    def update_data(self):
+        response = requests.post(f'https://www.parsehub.com/api/v2/projects/{self.project_token}/run',
+                                 params=self.params)
+
+        def poll():
+            time.sleep(0.1)
+            old_data = self.data
+            while True:
+                new_data = self.get_data()
+                if new_data != old_data:
+                    self.data = new_data
+                    print("Data updated")
+                    break
+                time.sleep(5)
+
+        t = threading.Thread(target=poll)
+        t.start()
+
+
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+
+def get_audio():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        said = ""
+
+        try:
+            said = r.recognize_google(audio)
+        except Exception as e:
+            print("Exception:", str(e))
+
+    return said.lower()
 
 
