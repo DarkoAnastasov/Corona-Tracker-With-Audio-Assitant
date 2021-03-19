@@ -42,5 +42,21 @@ class Data:
 
         return "0"
 
+    def get_country_data(self, country):
+        data = self.data["country"]
+
+        for content in data:
+            if content['name'].lower() == country.lower():
+                return content
+
+        return "0"
+
+    def get_list_of_countries(self):
+        countries = []
+        for country in self.data['country']:
+            countries.append(country['name'].lower())
+
+        return countries
+
 
 
